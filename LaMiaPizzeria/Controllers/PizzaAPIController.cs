@@ -17,41 +17,40 @@ namespace LaMiaPizzeria.Controllers
                 return Ok(list);
             }
         }
-    }
 
-    [HttpGet("{keyWord}")]
-    public IActionResult GetPizzasByKeyword(string keyWord)
-    {
-        using (PizzaContext db = new())
+        [HttpGet("{keyWord}")]
+        public IActionResult GetPizzaByKeyword(string keyWord)
         {
-            List<Pizza> pizzaByKeyword = db.Pizza.Where(pizza => pizza.Title.Contains(keyWord)).ToList();
-            if (pizzaByKeyword != null)
+            using (PizzaContext db = new PizzaContext())
             {
-                return Ok(pizzaByKeyword);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-    }
-
-    [HttpGet("{id}")]
-    public IActionResult SearchById(int id)
-    {
-        using (PizzaContext db = new PizzaContext())
-        {
-            Pizza? pizzaId = db.Pizza.Where(pizza => pizza.Id == id).FirstOrDefault();
-            if (pizzaId != null)
-            {
-
-                return Ok(pizzaId);
-            }
-            else
-            {
-                return NotFound();
+                List<Pizza> pizzaByKeyword = db.Pizza.Where(pizza => pizza.Title.Contains(keyWord)).ToList();
+                if (pizzaByKeyword == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(pizzaByKeyword);
+                }
             }
         }
 
+        [HttpGet("{id}")]
+        public IActionResult SearchById(int id)
+        {
+            using (PizzaContext db = new PizzaContext())
+            {
+                Pizza? pizzaId = db.Pizza.Where(pizza => pizza.Id == id).FirstOrDefault();
+                if (pizzaId == null)
+                {
+
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(pizzaId);
+                }
+            }
+        }
     }
 }
